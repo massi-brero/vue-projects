@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <p>Counter: {{ counter }}</p>
+      <button @click="add">Add</button>
+      <button @click="remove">Remove</button>
+      <p v-if="itsEnough()">Genug jetzt!</p>
+    </div>
+
+    <script>
+      const { createApp, ref } = Vue
+      createApp({
+        setup() {
+          const counter = ref(0)
+
+          function add() {
+            counter.value++
+          }
+
+          function remove() {
+            counter.value--
+          }
+
+          function itsEnough() {
+            return counter.value > 10
+          }
+
+          return { itsEnough, counter, add, remove }
+        },
+      }).mount('#app')
+    </script>
+  </body>
+</html>
