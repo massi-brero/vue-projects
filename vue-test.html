@@ -15,26 +15,26 @@
     </div>
 
     <script>
-      const { createApp, ref } = Vue
+      const { createApp, ref } = Vue;
       createApp({
         setup() {
-          const counter = ref(0)
+          const counter = ref(0);
 
           function add() {
-            counter.value++
+            counter.value++;
           }
 
           function remove() {
-            counter.value--
+            counter.value--;
           }
 
           function itsEnough() {
-            return counter.value > 10
+            return counter.value > 10;
           }
 
-          return { itsEnough, counter, add, remove }
+          return { itsEnough, counter, add, remove };
         },
-      }).mount('#app')
+      }).mount("#app");
     </script>
   </body>
 </html>
