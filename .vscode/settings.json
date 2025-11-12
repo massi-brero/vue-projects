@@ -3,7 +3,8 @@
   "editor.formatOnSaveMode": "file",
 
   "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false
   },
   "[javascript]": {
     "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"

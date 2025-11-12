@@ -20,6 +20,9 @@
       .cant {
         color: red;
       }
+      input {
+        margin-left: 8px;
+      }
     </style>
     <script src="https://unpkg.com/vue@3.4.0"></script>
   </head>
@@ -28,9 +31,12 @@
     <div id="app">
       <div>{{message}}</div>
       <div>
-        Can you drive?
-        <span :class="{'can': canDrive === 'Yes', 'cant': canDrive === 'No' }"
-          >{{canDrive ? 'Yes' : 'No'}}</span
+        <label for="age">Enter your age</label>
+        <input type="number" v-model="age" />
+      </div>
+      <div>
+        <span :class="{'can': canDrive, 'cant': !canDrive }"
+          >{{age !== null ? canDrive ? 'You can drive a car.' : 'You cannot drive!' : ''}}</span
         >
       </div>
     </div>
