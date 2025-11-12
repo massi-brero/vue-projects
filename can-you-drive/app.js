@@ -5,8 +5,6 @@ const App = {
     let age = ref(null)
     const canDrive = computed(() => {
       return age.value >= 18
-        ? 'Yes, you can drive a car.'
-        : 'No, you cannot drive a car.'
     })
 
     setTimeout(() => {
