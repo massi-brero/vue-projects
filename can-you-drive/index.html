@@ -33,10 +33,11 @@
       <div>
         <label for="age">Enter your age</label>
         <input type="number" v-model="age" />
-      </div>
+        </div>
       <div>
         <span :class="{'can': canDrive, 'cant': !canDrive }"
-          >{{age !== null ? canDrive ? 'You can drive a car.' : 'You cannot drive!' : ''}}</span
+          >{{age !== null ? canDrive ? 'You can drive a car.' : 'You cannot
+          drive!' : ''}}</span
         >
       </div>
     </div>

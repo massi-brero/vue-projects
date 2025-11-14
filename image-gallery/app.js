@@ -33,6 +33,9 @@ const App = {
         newPhotoUrl.value = ''
       }
     }
+    const removePhoto = (index) => {
+      photos.value.splice(index, 1)
+    }
     const toggleFavorite = (photo) => {
       photo.isFavorite = !photo.isFavorite
     }
@@ -41,7 +44,8 @@ const App = {
       photos,
       newPhotoUrl,
       addPhoto,
-      toggleFavorite
+      toggleFavorite,
+      removePhoto,
     }
   },
 }
