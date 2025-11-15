@@ -10,6 +10,7 @@
 
     [type="checkbox"] {
       margin-right: 10px;
+      cursor: pointer;
     }
 
     body {
@@ -91,7 +92,7 @@
           <span></span>
         </div>
         <!-- Removing a task -->
-        <button class="remove-button">✖</button>
+        <button class="remove-button" @click="removeTask(task.id)">✖</button>
       </div>
     </div>
   </div>

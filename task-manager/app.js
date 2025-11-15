@@ -59,7 +59,11 @@ const App = {
       resetForm()
     }
 
-    function resetForm() {
+    removeTask = (taskId) => {
+      tasks.value = tasks.value.filter((task) => task.id !== taskId)
+    }
+
+    resetForm = () => {
       newTaskTitle.value = ''
       newPriority.value = ''
       newTaskInput.value.focus()
@@ -72,6 +76,7 @@ const App = {
       addTask,
       filteredTasks,
       filteredText,
+      removeTask,
     }
   },
 }
