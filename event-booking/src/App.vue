@@ -12,10 +12,14 @@
         @register="console.log('registered')"
       />
     </section>
-    <h1 class="text-2xl font-medium">Yout Bookings</h1>
+    <h2 class="text-2xl font-medium">Your Bookings</h2>
+    <section class="grid grid-cols-1 gap-4">
+      <BookingItem v-for="i in 3" :key="i" />
+    </section>
   </main>
 </template>
 
 <script setup>
+import BookingItem from '@/components/BookingItem.vue'
 import EventCard from '@/components/EventCard.vue'
 </script>

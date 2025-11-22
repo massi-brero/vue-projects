@@ -1,20 +1,22 @@
 <template>
-  <div class="border border-gray-400 bg-white rounded-md p-2">
-    <h3 class="p-4 font-medium text-xl border-b border-gray-200">{{ title }}</h3>
-    <p class="p-4 border-b border-gray-200">{{ when }}</p>
-    <p class="p-4">{{ description }}</p>
-    <section class="flex justify-end">
-      <button
-        class="text-small font-medium border border-gray-400 rounded-full px-3 py-1 hover:bg-gray-100 cursor-pointer"
-        @click="$emit('register')"
-      >
-        Register
-      </button>
-    </section>
-  </div>
+  <SectionCard>
+    <template #header>{{ title }}</template>
+    <div>{{ when }}</div>
+    <template #footer>
+      <p>{{ description }}</p>
+      <div class="flex justify-end">
+        <RoundButton @click="$emit('register')" class="p-9">
+          <pre>Register</pre>
+        </RoundButton>
+      </div>
+    </template>
+  </SectionCard>
 </template>
 
 <script setup>
+import SectionCard from './SectionCard.vue'
+import RoundedCard from './RoundedCard.vue'
+import RoundButton from '@/components/RoundButton.vue'
 defineProps({ title: String, when: String, description: String })
 defineEmits(['register'])
 </script>
