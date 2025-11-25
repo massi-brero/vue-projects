@@ -14,9 +14,8 @@
 </template>
 
 <script setup>
-import SectionCard from './SectionCard.vue'
-import RoundedCard from './RoundedCard.vue'
 import RoundButton from '@/components/RoundButton.vue'
+import SectionCard from './SectionCard.vue'
 defineProps({ title: String, when: String, description: String })
 defineEmits(['register'])
 </script>

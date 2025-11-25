@@ -10,7 +10,7 @@
           :title="e.title"
           :when="e.date"
           :description="e.description"
-          @register="console.log('registered')"
+          @register="dataService.handleRegistration(e)"
         />
       </template>
       <template v-else>

@@ -1,5 +1,10 @@
 <template>
-  <button :class="['text-small px-3 py-1 rounded-full', variants[variant] ?? variants.default]">
+  <button
+    :class="[
+      'text-small px-3 py-1 rounded-full cursor-pointer',
+      variants[variant] ?? variants.default
+    ]"
+  >
     <slot></slot>
   </button>
 </template>
