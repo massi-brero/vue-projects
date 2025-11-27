@@ -5,7 +5,7 @@
     <template #footer>
       <p>{{ description }}</p>
       <div class="flex justify-end">
-        <RoundButton @click="$emit('register')" class="p-9">
+        <RoundButton @click="$emit('register')" class="p-9 mt-4">
           <pre>Register</pre>
         </RoundButton>
       </div>

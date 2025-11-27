@@ -3,7 +3,7 @@
     <h1 class="text-4xl font-medium">Event Booking App</h1>
     <h1 class="text-2xl font-medium">All Events</h1>
     <section class="grid grid-cols-2 gap-8" x>
-      <template v-if="!loading">
+      <template v-if="!loadingEvents">
         <EventCard
           v-for="e in events"
           :key="e.id"
@@ -18,9 +18,12 @@
       </template>
     </section>
     <h2 class="text-2xl font-medium">Your Bookings</h2>
-    <section class="grid grid-cols-1 gap-4">
-      <BookingItem v-for="i in 3" :key="i" />
-    </section>
+    <template v-if="!loadingBookings">
+      <section class="grid grid-cols-1 gap-4">
+        <BookingItem v-for="booking in bookings" :key="booking.id" :title="booking.eventTitle" />
+      </section>
+    </template>
+    <template v-else><LoadingBookingItem v-for="i in 4" :key="i" /> </template>
   </main>
 </template>
 
@@ -30,17 +33,32 @@ import EventCard from '@/components/EventCard.vue'
 import dataService from '@/services/data-service.js'
 import { onMounted, ref } from 'vue'
 import LoadingEventCard from './components/LoadingEventCard.vue'
+import LoadingBookingItem from './components/LoadingBookingItem.vue'
 
 const events = ref([])
-const loading = ref(false)
+const bookings = ref([])
+const loadingEvents = ref(false)
+const loadingBookings = ref(false)
 
 const fetchEvents = async () => {
-  loading.value = true
+  loadingEvents.value = true
   try {
     events.value = await dataService.getEvents()
   } finally {
-    loading.value = false
+    loadingEvents.value = false
   }
 }
-onMounted(async () => fetchEvents())
+
+const fetchBookings = async () => {
+  loadingBookings.value = true
+  try {
+    bookings.value = await dataService.getBookings()
+  } finally {
+    loadingBookings.value = false
+  }
+}
+onMounted(async () => {
+  fetchEvents()
+  fetchBookings()
+})
 </script>

@@ -5,6 +5,10 @@ export default {
     return fetch(`${serverURL}/events`).then((res) => res.json())
   },
 
+  getBookings() {
+    return fetch(`${serverURL}/bookings`).then((res) => res.json())
+  },
+
   async handleRegistration(event) {
     const newBooking = {
       id: Date.now().toString(),

@@ -1,7 +1,7 @@
 <template>
   <button
     :class="[
-      'text-small px-3 py-1 rounded-full cursor-pointer',
+      'text-small px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200',
       variants[variant] ?? variants.default
     ]"
   >
