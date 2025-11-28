@@ -1,4 +1,4 @@
-const serverURL = 'http://localhost:3002'
+const serverURL = 'http://localhost:3001'
 
 export default {
   getEvents() {
