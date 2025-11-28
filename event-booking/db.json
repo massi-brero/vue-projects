@@ -18,12 +18,12 @@
       "id": "3",
       "title": "PHP Conference 2022",
       "date": "2024-05-20",
-      "description": "Join us for a day of insightful talks and networking with industry leaders in technology.",
+      "description": "Join us for a day of insightful talks and networking with industry leaders in technology",
       "location": "Convention Center, Downtown"
     },
     {
       "id": "4",
-      "title": "Rust Conference 2021",
+      "title": "Rust Conference 2024",
       "date": "2024-05-20",
       "description": "Join us for a day of insightful talks and networking with industry leaders in technology.",
       "location": "Convention Center, Downtown"
@@ -31,60 +31,20 @@
   ],
   "bookings": [
     {
-      "id": "1764092355342",
+      "id": "1764362724348",
       "userId": 1,
       "eventId": "1",
       "eventTitle": "Rails Conference 2024",
-      "date": "2025-11-25T17:39:15.342Z",
-      "status": "confirmed"
+      "date": "2025-11-28T20:45:24.348Z",
+      "status": "pending"
     },
     {
-      "id": "1764092357614",
-      "userId": 1,
-      "eventId": "1",
-      "eventTitle": "Rails Conference 2024",
-      "date": "2025-11-25T17:39:17.614Z",
-      "status": "confirmed"
-    },
-    {
-      "id": "1764092364297",
-      "userId": 1,
-      "eventId": "2",
-      "eventTitle": "Vue Conference 2023",
-      "date": "2025-11-25T17:39:24.297Z",
-      "status": "confirmed"
-    },
-    {
-      "id": "1764092365441",
-      "userId": 1,
-      "eventId": "2",
-      "eventTitle": "Vue Conference 2023",
-      "date": "2025-11-25T17:39:25.441Z",
-      "status": "confirmed"
-    },
-    {
-      "id": "1764092423534",
+      "id": "1764362728172",
       "userId": 1,
       "eventId": "4",
-      "eventTitle": "Rust Conference 2021",
-      "date": "2025-11-25T17:40:23.534Z",
-      "status": "confirmed"
-    },
-    {
-      "id": "1764092427051",
-      "userId": 1,
-      "eventId": "2",
-      "eventTitle": "Vue Conference 2023",
-      "date": "2025-11-25T17:40:27.051Z",
-      "status": "confirmed"
-    },
-    {
-      "id": "1764262335890",
-      "userId": 1,
-      "eventId": "3",
-      "eventTitle": "PHP Conference 2022",
-      "date": "2025-11-27T16:52:15.890Z",
-      "status": "confirmed"
+      "eventTitle": "Rust Conference 2024",
+      "date": "2025-11-28T20:45:28.172Z",
+      "status": "pending"
     }
   ]
 }

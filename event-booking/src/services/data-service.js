@@ -1,4 +1,4 @@
-const serverURL = 'http://localhost:3001'
+const serverURL = 'http://localhost:3002'
 
 export default {
   getEvents() {
@@ -9,23 +9,24 @@ export default {
     return fetch(`${serverURL}/bookings`).then((res) => res.json())
   },
 
-  async handleRegistration(event) {
+  async handleRegistration(event, bookings) {
     const newBooking = {
       id: Date.now().toString(),
       userId: 1,
       eventId: event.id,
       eventTitle: event.title,
-      date: new Date().toISOString()
+      date: new Date().toISOString(),
+      status: 'pending'
+    }
+    if (bookings) {
+      bookings.value.push(newBooking)
     }
     const response = await fetch(`${serverURL}/bookings`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        ...newBooking,
-        status: 'confirmed'
-      })
+      body: JSON.stringify(newBooking)
     })
     return response.json()
   }

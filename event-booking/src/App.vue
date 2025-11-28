@@ -10,7 +10,7 @@
           :title="e.title"
           :when="e.date"
           :description="e.description"
-          @register="dataService.handleRegistration(e)"
+          @register="dataService.handleRegistration(e) & addBookingsToList(e)"
         />
       </template>
       <template v-else>
@@ -20,7 +20,12 @@
     <h2 class="text-2xl font-medium">Your Bookings</h2>
     <template v-if="!loadingBookings">
       <section class="grid grid-cols-1 gap-4">
-        <BookingItem v-for="booking in bookings" :key="booking.id" :title="booking.eventTitle" />
+        <BookingItem
+          v-for="booking in bookings"
+          :key="booking.id"
+          :title="booking.eventTitle"
+          :status="booking.status"
+        />
       </section>
     </template>
     <template v-else><LoadingBookingItem v-for="i in 4" :key="i" /> </template>
@@ -43,7 +48,11 @@ const loadingBookings = ref(false)
 const fetchEvents = async () => {
   loadingEvents.value = true
   try {
-    events.value = await dataService.getEvents()
+    try {
+      events.value = await dataService.getEvents()
+    } catch {
+      console.log('Error fetching events')
+    }
   } finally {
     loadingEvents.value = false
   }
@@ -52,11 +61,16 @@ const fetchEvents = async () => {
 const fetchBookings = async () => {
   loadingBookings.value = true
   try {
-    bookings.value = await dataService.getBookings()
+    try {
+      bookings.value = await dataService.getBookings()
+    } catch (err) {
+      console.log('Error fetching bookings')
+    }
   } finally {
     loadingBookings.value = false
   }
 }
+
 onMounted(async () => {
   fetchEvents()
   fetchBookings()

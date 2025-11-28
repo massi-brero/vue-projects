@@ -6,7 +6,6 @@ const App = {
     const canDrive = computed(() => {
       return age.value >= 18
     })
-
     return { message, canDrive, age }
   },
 }
