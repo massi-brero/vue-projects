@@ -10,7 +10,7 @@
           :title="e.title"
           :when="e.date"
           :description="e.description"
-          @register="dataService.handleRegistration(e) & addBookingsToList(e)"
+          @register="addBooking(e)"
         />
       </template>
       <template v-else>
@@ -68,6 +68,14 @@ const fetchBookings = async () => {
     }
   } finally {
     loadingBookings.value = false
+  }
+}
+
+const addBooking = async (event) => {
+  try {
+    await dataService.handleRegistration(event, bookings)
+  } catch (err) {
+    console.log('Error adding booking', err)
   }
 }
 

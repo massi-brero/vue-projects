@@ -16,18 +16,28 @@ export default {
       eventId: event.id,
       eventTitle: event.title,
       date: new Date().toISOString(),
-      status: 'pending'
+      status: 'confirmed'
     }
-    if (bookings) {
-      bookings.value.push(newBooking)
+
+    bookings.value.push({ ...newBooking, status: 'pending' })
+
+    try {
+      const response = await fetch(`${serverURL}/bookings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newBooking)
+      })
+
+      if (response.ok) {
+        const index = bookings.value.findIndex((b) => b.id === newBooking.id)
+        bookings.value[index] = await response.json()
+        console.log(bookings)
+      }
+    } catch (err) {
+      bookings.value = bookings.value.filter((b) => b.id === 'confirmed')
+      throw new Error('Failed to confirm booking', err)
     }
-    const response = await fetch(`${serverURL}/bookings`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newBooking)
-    })
-    return response.json()
   }
 }
