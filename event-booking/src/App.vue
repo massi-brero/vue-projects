@@ -25,6 +25,7 @@
           :key="booking.id"
           :title="booking.eventTitle"
           :status="booking.status"
+          @cancel="cancelBooking(booking.id)"
         />
       </section>
     </template>

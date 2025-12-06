@@ -25,21 +25,43 @@ export default {
     }
 
     bookings.value.push({ ...newBooking, status: 'pending' })
-    fetch(`${serverURL}/bookings`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newBooking)
-    }).then(async (response) => {
+
+    try {
+      const response = await fetch(`${serverURL}/bookings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newBooking)
+      }).then
+
       if (response.ok) {
         const index = bookings.value.findIndex((b) => b.id === newBooking.id)
         bookings.value[index] = await response.json()
         console.log(bookings)
-      } else {
-        bookings.value = bookings.value.filter((b) => b.status === 'confirmed')
-        throw new Error('Failed to confirm booking', err)
       }
+    } catch (err) {
+      bookings.value = bookings.value.filter((b) => b.id === 'confirmed')
+      throw new Error('Failed to confirm booking', err)
+    }
+  },
+
+  async handleCancellation(bookingId, bookings) {
+    const index = bookings.value.findIndex((b) => b.id === bookingId)
+    if (index === -1) {
+      alert('Booking not found.')
+      return
+    }
+    const bookingToCancel = bookings.value[index]
+    bookings.value[index].status = 'cancelling'
+    const res = awaitfetch(`${serverURL}/bookings/${bookingId}`, {
+      method: 'DELETE'
     })
+
+    if (res.ok) {
+      bookings.value.splice(index, 1)
+    } else {
+      throw new Error('Failed to cancel booking')
+    }
   }
 }
