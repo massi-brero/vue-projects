@@ -10,6 +10,11 @@ export default {
   },
 
   async handleRegistration(event, bookings) {
+    if (bookings.value.some((b) => b.eventId === event.id && b.userId === 1)) {
+      alert('You have already booked this event.')
+      return
+    }
+
     const newBooking = {
       id: Date.now().toString(),
       userId: 1,
