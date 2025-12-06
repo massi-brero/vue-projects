@@ -25,24 +25,21 @@ export default {
     }
 
     bookings.value.push({ ...newBooking, status: 'pending' })
-
-    try {
-      const response = await fetch(`${serverURL}/bookings`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newBooking)
-      })
-
+    fetch(`${serverURL}/bookings`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newBooking)
+    }).then(async (response) => {
       if (response.ok) {
         const index = bookings.value.findIndex((b) => b.id === newBooking.id)
         bookings.value[index] = await response.json()
         console.log(bookings)
+      } else {
+        bookings.value = bookings.value.filter((b) => b.status === 'confirmed')
+        throw new Error('Failed to confirm booking', err)
       }
-    } catch (err) {
-      bookings.value = bookings.value.filter((b) => b.id === 'confirmed')
-      throw new Error('Failed to confirm booking', err)
-    }
+    })
   }
 }

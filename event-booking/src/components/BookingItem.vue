@@ -5,7 +5,7 @@
         <div>{{ title }}</div>
         <div>{{ status }}</div>
       </div>
-      <RoundButton variant="danger">Cancel</RoundButton>
+      <RoundButton variant="danger" @click="$emit('cancel')">Cancel</RoundButton>
     </div>
   </SectionCard>
 </template>
@@ -18,4 +18,5 @@ defineProps({
   title: String,
   status: String
 })
+defineEmits(['cancel'])
 </script>
