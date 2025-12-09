@@ -81,11 +81,7 @@ const addBooking = async (event) => {
 }
 
 const cancelBooking = async (bookingId) => {
-  try {
-    await dataService.handleCancellation(bookingId, bookings)
-  } catch (err) {
-    alert('Error cancelling booking', err)
-  }
+  await dataService.handleCancellation(bookingId, bookings)
 }
 
 onMounted(async () => {

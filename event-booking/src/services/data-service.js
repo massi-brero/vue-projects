@@ -33,35 +33,49 @@ export default {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(newBooking)
-      }).then
+      })
 
       if (response.ok) {
-        const index = bookings.value.findIndex((b) => b.id === newBooking.id)
+        const index = findIndex(bookings.value, newBooking.id)
+        console.log(index)
+
         bookings.value[index] = await response.json()
         console.log(bookings)
       }
     } catch (err) {
-      bookings.value = bookings.value.filter((b) => b.id === 'confirmed')
-      throw new Error('Failed to confirm booking', err)
+      bookings.value = bookings.value.filter((b) => b.id !== 'confirmed')
+      alert('Failed to confirm booking', err)
     }
   },
 
   async handleCancellation(bookingId, bookings) {
-    const index = bookings.value.findIndex((b) => b.id === bookingId)
+    const index = findIndex(bookings.value, bookingId)
     if (index === -1) {
       alert('Booking not found.')
       return
     }
     const bookingToCancel = bookings.value[index]
-    bookings.value[index].status = 'cancelling'
-    const res = awaitfetch(`${serverURL}/bookings/${bookingId}`, {
-      method: 'DELETE'
-    })
+    bookings.value.splice(index, 1)
 
-    if (res.ok) {
-      bookings.value.splice(index, 1)
-    } else {
-      throw new Error('Failed to cancel booking')
+    bookings.value[index].status = 'cancelling'
+
+    try {
+      const res = await fetch(`${serverURL}/bookings/${bookingId}`, {
+        method: 'DELETE'
+      })
+
+      if (!res.ok) {
+        alert('Failed to cancel booking')
+      }
+    } catch (error) {
+      alert('Server Error')
+      console.log(error)
     }
   }
+}
+function findIndex(list, id) {
+  if (Array.isArray(list)) {
+    return list.findIndex((item) => item.id ?? null === id)
+  }
+  return -1
 }
