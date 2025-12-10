@@ -55,8 +55,6 @@ export default {
       return
     }
     const bookingToCancel = bookings.value[index]
-    bookings.value.splice(index, 1)
-
     bookings.value[index].status = 'cancelling'
 
     try {
@@ -64,18 +62,21 @@ export default {
         method: 'DELETE'
       })
 
-      if (!res.ok) {
+      if (res.ok) {
+        bookings.value.splice(index, 1)
+      } else {
         alert('Failed to cancel booking')
       }
     } catch (error) {
       alert('Server Error')
+      bookings.value[index].status = 'confimed'
       console.log(error)
     }
   }
 }
 function findIndex(list, id) {
   if (Array.isArray(list)) {
-    return list.findIndex((item) => item.id ?? null === id)
+    return list.findIndex((item) => item.id === id)
   }
   return -1
 }
