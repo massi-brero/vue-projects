@@ -23,7 +23,7 @@
       </SectionCard>
     </template>
     <template v-else>
-      <section class="grid grid-cols-2 gap-8" x>
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-8" x>
         <template v-if="!loading">
           <template v-if="events.length > 0">
             <EventCard

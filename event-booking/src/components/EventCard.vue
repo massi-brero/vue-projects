@@ -3,7 +3,7 @@
     <template #header>{{ title }}</template>
     <div>{{ when }}</div>
     <template #footer>
-      <p>{{ description }}</p>
+      <p id="event_description">{{ description }}</p>
       <div class="flex justify-end">
         <RoundButton @click="$emit('register')" class="p-9 mt-4">
           <span>Register</span>
@@ -20,4 +20,10 @@ defineProps({ title: String, when: String, description: String })
 defineEmits(['register'])
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+@media screen and (max-width: 1024px) {
+  #event_description {
+    display: none;
+  }
+}
+</style>
