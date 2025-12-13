@@ -1,0 +1,378 @@
+diff --git a/src/components/BookingList.vue b/src/components/BookingList.vue
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/src/components/BookingList.vue
+@@ -0,0 +1,92 @@
++<template>
++  <section class="space-y-4">
++    <h2 class="text-2xl font-medium">Your Bookings</h2>
++
++    <template v-if="loading">
++      <LoadingBookingItem v-for="i in 4" :key="i" />
++    </template>
++
++    <template v-else-if="error">
++      <div class="text-center">
++        <p class="text-red-600 mb-4">Error: {{ error }}</p>
++        <button class="rounded bg-blue-600 text-white px-3 py-1" @click="fetchBookings">
++          Retry
++        </button>
++      </div>
++    </template>
++
++    <template v-else-if="bookings.length === 0">
++      <EmptyBookings @retry="fetchBookings" />
++    </template>
++
++    <section v-else class="grid grid-cols-1 gap-4">
++      <BookingItem
++        v-for="booking in bookings"
++        :key="booking.id"
++        :title="booking.eventTitle"
++        :status="booking.status"
++        @cancel="cancelBooking(booking.id)"
++      />
++    </section>
++  </section>
++</template>
++
++<script setup>
++import { ref, onMounted, defineExpose } from 'vue'
++import BookingItem from './BookingItem.vue'
++import LoadingBookingItem from './LoadingBookingItem.vue'
++import EmptyBookings from './EmptyBookings.vue'
++import dataService from '@/services/data-service.js'
++
++const bookings = ref([])
++const loading = ref(false)
++const error = ref(null)
++
++const fetchBookings = async () => {
++  loading.value = true
++  error.value = null
++  try {
++    bookings.value = await dataService.getBookings()
++  } catch (err) {
++    error.value = err?.message || 'Failed to fetch bookings'
++    bookings.value = []
++  } finally {
++    loading.value = false
++  }
++}
++
++const addBooking = async (event) => {
++  try {
++    await dataService.handleRegistration(event, bookings)
++  } catch (err) {
++    error.value = err?.message || 'Could not add booking'
++    alert(error.value)
++  }
++}
++
++const cancelBooking = async (bookingId) => {
++  try {
++    await dataService.handleCancellation(bookingId, bookings)
++  } catch (err) {
++    error.value = err?.message || 'Could not cancel booking'
++    alert(error.value)
++  }
++}
++
++// Make addBooking available to parent
++defineExpose({ addBooking })
++
++onMounted(() => {
++  fetchBookings()
++})
++</script>
++
++<style scoped>
++/* optional style */
++</style>
++
+diff --git a/src/components/EmptyBookings.vue b/src/components/EmptyBookings.vue
+new file mode 100644
+index 0000000..2222222
+--- /dev/null
++++ b/src/components/EmptyBookings.vue
+@@ -0,0 +1,18 @@
++<template>
++  <div class="text-center py-8">
++    <p class="text-gray-600 mb-4">You have no bookings yet.</p>
++    <button class="rounded bg-blue-600 text-white px-3 py-2" @click="$emit('retry')">
++      Refresh
++    </button>
++  </div>
++</template>
++
++<script setup>
++// no logic required
++</script>
++
++<style scoped>
++/* optional style */
++</style>
++
+diff --git a/src/services/data-service.js b/src/services/data-service.js
+index 7fd6c3e..1111111 100644
+--- a/src/services/data-service.js
++++ b/src/services/data-service.js
+@@ -1,84 +1,113 @@
+-const serverURL = 'http://localhost:3001'
+-
+-export default {
+-  getEvents() {
+-    return fetch(`${serverURL}/events`).then((res) => res.json())
+-  },
+-
+-  getBookings() {
+-    return fetch(`${serverURL}/bookings`).then((res) => res.json())
+-  },
+-
+-  async handleRegistration(event, bookings) {
+-    if (bookings.value.some((b) => b.eventId === event.id && b.userId === 1)) {
+-      alert('You have already booked this event.')
+-      return
+-    }
+-
+-    const newBooking = {
+-      id: Date.now().toString(),
+-      userId: 1,
+-      eventId: event.id,
+-      eventTitle: event.title,
+-      date: new Date().toISOString(),
+-      status: 'confirmed'
+-    }
+-
+-    bookings.value.push({ ...newBooking, status: 'pending' })
+-
+-    try {
+-      const response = await fetch(`${serverURL}/bookings`, {
+-        method: 'POST',
+-        headers: {
+-          'Content-Type': 'application/json'
+-        },
+-        body: JSON.stringify(newBooking)
+-      })
+-
+-      if (response.ok) {
+-        const index = findIndex(bookings.value, newBooking.id)
+-        console.log(index)
+-
+-        bookings.value[index] = await response.json()
+-        console.log(bookings)
+-      }
+-    } catch (err) {
+-      bookings.value = bookings.value.filter((b) => b.id !== 'confirmed')
+-      alert('Failed to confirm booking', err)
+-    }
+-  },
+-
+-  async handleCancellation(bookingId, bookings) {
+-    const index = findIndex(bookings.value, bookingId)
+-    if (index === -1) {
+-      alert('Booking not found.')
+-      return
+-    }
+-    const bookingToCancel = bookings.value[index]
+-    bookings.value[index].status = 'cancelling'
+-
+-    try {
+-      const res = await fetch(`${serverURL}/bookings/${bookingId}`, {
+-        method: 'DELETE'
+-      })
+-
+-      if (res.ok) {
+-        bookings.value.splice(index, 1)
+-      } else {
+-        alert('Failed to cancel booking')
+-      }
+-    } catch (error) {
+-      alert('Server Error')
+-      bookings.value[index].status = 'confimed'
+-      console.log(error)
+-    }
+-  }
+-}
+-function findIndex(list, id) {
+-  if (Array.isArray(list)) {
+-    return list.findIndex((item) => item.id === id)
+-  }
+-  return -1
+-}
++const serverURL = 'http://localhost:3001'
++
++export default {
++  getEvents() {
++    return fetch(`${serverURL}/events`).then((res) => res.json())
++  },
++
++  getBookings() {
++    return fetch(`${serverURL}/bookings`).then((res) => res.json())
++  },
++
++  async handleRegistration(event, bookings) {
++    if (bookings.value.some((b) => b.eventId === event.id && b.userId === 1)) {
++      alert('You have already booked this event.')
++      return
++    }
++
++    const newBooking = {
++      id: Date.now().toString(),
++      userId: 1,
++      eventId: event.id,
++      eventTitle: event.title,
++      date: new Date().toISOString(),
++      status: 'confirmed'
++    }
++
++    // optimistic update: pending
++    bookings.value.push({ ...newBooking, status: 'pending' })
++
++    try {
++      const response = await fetch(`${serverURL}/bookings`, {
++        method: 'POST',
++        headers: { 'Content-Type': 'application/json' },
++        body: JSON.stringify(newBooking)
++      })
++
++      if (response.ok) {
++        const updatedBooking = await response.json()
++        const index = findIndex(bookings.value, newBooking.id)
++        if (index !== -1) {
++          bookings.value[index] = updatedBooking
++        }
++        return updatedBooking
++      } else {
++        // remove the optimistic pending item
++        bookings.value = bookings.value.filter((b) => b.id !== newBooking.id)
++        const text = await response.text()
++        throw new Error('Failed to confirm booking: ' + (text || response.status))
++      }
++    } catch (err) {
++      // rollback optimistic update
++      bookings.value = bookings.value.filter((b) => b.id !== newBooking.id)
++      console.error('handleRegistration error:', err)
++      throw err
++    }
++  },
++
++  async handleCancellation(bookingId, bookings) {
++    const index = findIndex(bookings.value, bookingId)
++    if (index === -1) {
++      alert('Booking not found.')
++      return
++    }
++
++    // set cancelling optimistic state
++    bookings.value[index].status = 'cancelling'
++
++    try {
++      const res = await fetch(`${serverURL}/bookings/${bookingId}`, {
++        method: 'DELETE'
++      })
++
++      if (res.ok) {
++        bookings.value.splice(index, 1)
++      } else {
++        bookings.value[index].status = 'confirmed'
++        const text = await res.text()
++        throw new Error('Failed to cancel booking: ' + (text || res.status))
++      }
++    } catch (error) {
++      // rollback cancel
++      bookings.value[index].status = 'confirmed'
++      console.error('handleCancellation error:', error)
++      throw error
++    }
++  }
++}
++
++function findIndex(list, id) {
++  if (Array.isArray(list)) {
++    return list.findIndex((item) => item.id === id)
++  }
++  return -1
++}
++
+diff --git a/src/App.vue b/src/App.vue
+index 8d3f4e0..9999999 100644
+--- a/src/App.vue
++++ b/src/App.vue
+@@ -1,84 +1,44 @@
+ <template>
+   <main class="container mx-auto my-8 space-y-8">
+     <h1 class="text-4xl font-medium">Event Booking App</h1>
+     <h1 class="text-2xl font-medium">All Events</h1>
+-    <EventList @register="addBooking($event)"></EventList>
+-    <h2 class="text-2xl font-medium">Your Bookings</h2>
+-    <template v-if="!loadingBookings">
+-      <section class="grid grid-cols-1 gap-4">
+-        <BookingItem
+-          v-for="booking in bookings"
+-          :key="booking.id"
+-          :title="booking.eventTitle"
+-          :status="booking.status"
+-          @cancel="cancelBooking(booking.id)"
+-        />
+-      </section>
+-    </template>
+-    <template v-else><LoadingBookingItem v-for="i in 4" :key="i" /> </template>
++    <EventList @register="onRegisterEvent" />
++    <BookingList ref="bookingListRef" />
+   </main>
+ </template>
+ 
+ <script setup>
+-import BookingItem from '@/components/BookingItem.vue'
+-import dataService from '@/services/data-service.js'
+-import { onMounted, ref } from 'vue'
+-import LoadingBookingItem from './components/LoadingBookingItem.vue'
+-import EventList from './components/EventList.vue'
+-
+-const bookings = ref([])
+-const loadingBookings = ref(false)
+-
+-const fetchBookings = async () => {
+-  loadingBookings.value = true
+-  try {
+-    try {
+-      bookings.value = await dataService.getBookings()
+-    } catch (err) {
+-      console.log('Error fetching bookings')
+-    }
+-  } finally {
+-    loadingBookings.value = false
+-  }
+-}
+-
+-const addBooking = async (event) => {
+-  try {
+-    await dataService.handleRegistration(event, bookings)
+-  } catch (err) {
+-    console.log('Error adding booking', err)
+-  }
+-}
+-
+-const cancelBooking = async (bookingId) => {
+-  await dataService.handleCancellation(bookingId, bookings)
+-}
+-
+-onMounted(async () => {
+-  fetchBookings()
+-})
++import EventList from './components/EventList.vue'
++import BookingList from './components/BookingList.vue'
++import { ref } from 'vue'
++
++const bookingListRef = ref(null)
++
++const onRegisterEvent = (event) => {
++  if (bookingListRef.value?.addBooking) {
++    bookingListRef.value.addBooking(event)
++  } else {
++    console.warn('BookingList not mounted yet')
++  }
++}
+ </script>
