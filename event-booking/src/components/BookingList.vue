@@ -2,7 +2,7 @@
   <section class="space-y-4">
     <h2 class="text-2xl font-medium">Your Bookings</h2>
 
-    <template v-if="loading">
+    <template v-if="bookingsLoading">
       <LoadingBookingItem v-for="i in 4" :key="i" />
     </template>
 
@@ -20,13 +20,18 @@
     </template>
 
     <section v-else class="grid grid-cols-1 gap-4">
-      <BookingItem
-        v-for="booking in bookings"
-        :key="booking.id"
-        :title="booking.eventTitle"
-        :status="booking.status"
-        @cancel="cancelBooking(booking.id)"
-      />
+      <temoplate v-if="!loading">
+        <BookingItem
+          v-for="booking in bookings"
+          :key="booking.id"
+          :title="booking.eventTitle"
+          :status="booking.status"
+          @cancel="cancelBooking(booking.id)"
+        />
+      </temoplate>
+      <template v-else>
+        <LoadingBookingItem v-for="i in 4" :key="i" />
+      </template>
     </section>
   </section>
 </template>
@@ -36,23 +41,9 @@ import { ref, onMounted, defineExpose } from 'vue'
 import BookingItem from './BookingItem.vue'
 import LoadingBookingItem from './LoadingBookingItem.vue'
 import dataService from '@/services/data-service.js'
+import useBookings from '@/composables/useBookings'
 
-const bookings = ref([])
-const loading = ref(false)
-const error = ref(null)
-
-const fetchBookings = async () => {
-  loading.value = true
-  error.value = null
-  try {
-    bookings.value = await dataService.getBookings()
-  } catch (err) {
-    error.value = err?.message || 'Failed to fetch bookings'
-    bookings.value = []
-  } finally {
-    loading.value = false
-  }
-}
+const { bookings, loading, error, fetchBookings } = useBookings()
 
 const addBooking = async (event) => {
   try {

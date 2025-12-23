@@ -1,18 +1,13 @@
-// eslint.config.js
-import eslint from '@eslint/js'
-import vue from 'eslint-plugin-vue'
+import js from "@eslint/js";
+import globals from "globals";
+import pluginVue from "eslint-plugin-vue";
+import json from "@eslint/json";
+import css from "@eslint/css";
+import { defineConfig } from "eslint/config";
 
-export default [
-  {
-    files: ['**/*.js', '**/*.vue'],
-    languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module'
-    },
-    extends: [eslint.configs.recommended, vue.configs['vue3-recommended']],
-    rules: {
-      // Beispiel:
-      // "vue/no-unused-vars": "error",
-    }
-  }
-]
+export default defineConfig([
+  { files: ["**/*.{js,mjs,cjs,vue}"], plugins: { js }, extends: ["js/recommended"], languageOptions: { globals: globals.browser } },
+  pluginVue.configs["flat/essential"],
+  { files: ["**/*.json"], plugins: { json }, language: "json/json", extends: ["json/recommended"] },
+  { files: ["**/*.css"], plugins: { css }, language: "css/css", extends: ["css/recommended"] },
+]);
