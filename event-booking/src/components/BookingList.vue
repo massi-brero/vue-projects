@@ -2,7 +2,7 @@
   <section class="space-y-4">
     <h2 class="text-2xl font-medium">Your Bookings</h2>
 
-    <template v-if="bookingsLoading">
+    <template v-if="loading">
       <LoadingBookingItem v-for="i in 4" :key="i" />
     </template>
 
@@ -20,7 +20,7 @@
     </template>
 
     <section v-else class="grid grid-cols-1 gap-4">
-      <temoplate v-if="!loading">
+      <template v-if="!loading">
         <BookingItem
           v-for="booking in bookings"
           :key="booking.id"
@@ -28,43 +28,18 @@
           :status="booking.status"
           @cancel="cancelBooking(booking.id)"
         />
-      </temoplate>
-      <template v-else>
-        <LoadingBookingItem v-for="i in 4" :key="i" />
       </template>
     </section>
   </section>
 </template>
 
 <script setup>
-import { ref, onMounted, defineExpose } from 'vue'
+import useBookings from '@/composables/useBookings'
+import { onMounted } from 'vue'
 import BookingItem from './BookingItem.vue'
 import LoadingBookingItem from './LoadingBookingItem.vue'
-import dataService from '@/services/data-service.js'
-import useBookings from '@/composables/useBookings'
 
-const { bookings, loading, error, fetchBookings } = useBookings()
-
-const addBooking = async (event) => {
-  try {
-    await dataService.handleRegistration(event, bookings)
-  } catch (err) {
-    error.value = err?.message || 'Could not add booking'
-    alert(error.value)
-  }
-}
-
-const cancelBooking = async (bookingId) => {
-  try {
-    await dataService.handleCancellation(bookingId, bookings)
-  } catch (err) {
-    error.value = err?.message || 'Could not cancel booking'
-    alert(error.value)
-  }
-}
-
-// Make addBooking available to parent
-defineExpose({ addBooking })
+const { bookings, loading, error, fetchBookings, addBooking, cancelBooking } = useBookings()
 
 onMounted(() => {
   fetchBookings()
