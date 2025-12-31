@@ -1,8 +1,8 @@
 <template>Link</template>
 <script setup lang="ts">
-import type { TabProps } from '@/types/tabProps'
+import type { Tab } from '@/types/tab'
 
-const props = defineProps<TabProps>()
+const props = defineProps<{ currentTab: string; tab: Tab }>()
 defineEmits<{
   click: []
 }>()
