@@ -1,7 +1,5 @@
-import type { TabKey } from './tabKey'
-
 export type Tab = {
-  key: TabKey
+  key: string
   label: string
   icon?: string
 }
